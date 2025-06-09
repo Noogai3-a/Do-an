@@ -10,7 +10,7 @@ const app = express();
 
 // CORS: Cho phép frontend truy cập với session
 app.use(cors({
-    origin: ['http://localhost:5500', 'http://127.0.0.1:5500', 'http://127.0.0.1:5000', 'https://do-an-oyej.vercel.app/'],
+    origin: ['http://localhost:5500', 'http://127.0.0.1:5500', 'http://127.0.0.1:5000', 'https://do-an-zaqp.vercel.app/'],
     credentials: true, // Cần có để gửi cookie qua frontend
 }));
 
