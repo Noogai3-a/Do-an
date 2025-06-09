@@ -14,7 +14,7 @@ window.addEventListener("DOMContentLoaded", async function () {
   }
 
   try {
-    const res = await fetch(`http://localhost:5000/api/blogs/${postId}?preview=${isPreview}`, {
+    const res = await fetch(`https://backend-yl09.onrender.com/api/blogs/${postId}?preview=${isPreview}`, {
       credentials: 'include',
     });
     if (!res.ok) throw new Error("Không tìm thấy bài viết");
@@ -41,7 +41,7 @@ window.addEventListener("DOMContentLoaded", async function () {
     imgs.forEach(img => {
       const fileId = getDriveFileId(img.src);
       if (fileId) {
-        const proxyUrl = `http://localhost:5000/api/proxy-image?url=https://drive.google.com/uc?id=${fileId}`;
+        const proxyUrl = `https://backend-yl09.onrender.com/api/proxy-image?url=https://drive.google.com/uc?id=${fileId}`;
         const placeholder = '../assets/login_pic.jpg';
 
         img.src = placeholder;          // gán placeholder
@@ -55,7 +55,7 @@ window.addEventListener("DOMContentLoaded", async function () {
     if (img && blog.thumbnailImage) {
       const fileId = getDriveFileId(blog.thumbnailImage);
       if (fileId) {
-        const proxyUrl = `http://localhost:5000/api/proxy-image?url=https://drive.google.com/uc?id=${fileId}`;
+        const proxyUrl = `https://backend-yl09.onrender.com/api/proxy-image?url=https://drive.google.com/uc?id=${fileId}`;
         const placeholder = '../assets/login_pic.jpg';
 
         img.src = placeholder;

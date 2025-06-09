@@ -15,7 +15,7 @@ window.onload = function () {
                 logoutBtn.addEventListener('click', function (e) {
                     e.preventDefault();
 
-                    fetch('http://localhost:5000/api/auth/logout', {
+                    fetch('https://backend-yl09.onrender.com/api/auth/logout', {
                         method: 'GET',
                         credentials: 'include'
                     })

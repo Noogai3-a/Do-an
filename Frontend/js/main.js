@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
             logoutBtn.addEventListener('click', (e) => {
                 e.preventDefault();
                 localStorage.removeItem('user');
-                fetch('http://localhost:5000/api/auth/logout', {
+                fetch('https://backend-yl09.onrender.com/api/auth/logout', {
                     method: 'GET',
                     credentials: 'include'
                 })
@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Kiểm tra khi thay đổi kích thước cửa sổ
     window.addEventListener('resize', checkScreenSize);
 
-    fetch('http://localhost:5000/api/user-info', { credentials: 'include' })
+    fetch('https://backend-yl09.onrender.com/api/user-info', { credentials: 'include' })
         .then(res => res.status === 401 ? null : res.json())
         .then(data => {
             showContentAfterDelay(() => {
@@ -144,8 +144,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Gọi API tùy query hoặc default
         const url = query
-        ? `http://localhost:5000/api/blogs/search?q=${encodeURIComponent(query)}`
-        : `http://localhost:5000/api/blogs/search?default=true`;
+        ? `https://backend-yl09.onrender.com/api/blogs/search?q=${encodeURIComponent(query)}`
+        : `https://backend-yl09.onrender.com/api/blogs/search?default=true`;
 
         fetch(url)
         .then(res => res.json())

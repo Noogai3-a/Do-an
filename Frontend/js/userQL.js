@@ -94,7 +94,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Hàm load blog của user và render
   async function loadMyBlogs() {
     try {
-      const res = await fetch('http://localhost:5000/api/blogs/my', { credentials: 'include' });
+      const res = await fetch('https://backend-yl09.onrender.com/api/blogs/my', { credentials: 'include' });
       if (!res.ok) throw new Error("Không lấy được danh sách blog");
 
       const blogs = await res.json();
@@ -126,7 +126,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
           showConfirmModal("Bạn có chắc chắn muốn xóa blog này không?", async () => {
             try {
-              const deleteRes = await fetch(`http://localhost:5000/api/blogs/${blogId}`, {
+              const deleteRes = await fetch(`https://backend-yl09.onrender.com/api/blogs/${blogId}`, {
                 method: 'DELETE',
                 credentials: 'include'
               });

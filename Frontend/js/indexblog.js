@@ -80,7 +80,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   try {
-    const res = await fetch('http://localhost:5000/api/blogs', {
+    const res = await fetch('https://backend-yl09.onrender.com/api/blogs', {
       credentials: 'include',
     });
 

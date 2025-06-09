@@ -68,7 +68,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const sendOtpBtn = document.getElementById('sendOtpBtn');
     const otpSection = document.getElementById('otpSection');
     const registerBtn = document.getElementById('registerBtn');
-    const backendURL = 'http://localhost:5000';
+    const backendURL = 'https://backend-yl09.onrender.com';
 
     let otpSent = false;
 
