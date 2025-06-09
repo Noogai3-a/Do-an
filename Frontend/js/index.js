@@ -1,5 +1,5 @@
 window.onload = function () {
-    fetch('http://localhost:5000/api/user-info', {
+    fetch('https://backend-yl09.onrender.com/api/user-info', {
         credentials: 'include'
     })
     .then(res => res.status === 401 ? null : res.json())
