@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Hàm tạo HTML cho từng blog, có thêm nút delete
   function createBlogItem(blog) {
     const contentText = stripHTML(blog.content || "");
-    const placeholder = "../assets/login_pic.jpg";
+    const placeholder = "/assets/login_pic.jpg";
     let realImage = placeholder;
     // Xử lý thumbnail từ Google Drive nếu có
     if (blog.thumbnailImage) {

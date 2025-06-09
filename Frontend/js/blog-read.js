@@ -42,7 +42,7 @@ window.addEventListener("DOMContentLoaded", async function () {
       const fileId = getDriveFileId(img.src);
       if (fileId) {
         const proxyUrl = `https://backend-yl09.onrender.com/api/proxy-image?url=https://drive.google.com/uc?id=${fileId}`;
-        const placeholder = '../assets/login_pic.jpg';
+        const placeholder = '/assets/login_pic.jpg';
 
         img.src = placeholder;          // gán placeholder
         img.classList.remove('fade-in');
@@ -56,7 +56,7 @@ window.addEventListener("DOMContentLoaded", async function () {
       const fileId = getDriveFileId(blog.thumbnailImage);
       if (fileId) {
         const proxyUrl = `https://backend-yl09.onrender.com/api/proxy-image?url=https://drive.google.com/uc?id=${fileId}`;
-        const placeholder = '../assets/login_pic.jpg';
+        const placeholder = '/assets/login_pic.jpg';
 
         img.src = placeholder;
         img.classList.remove('fade-in');
@@ -127,7 +127,7 @@ document.addEventListener('DOMContentLoaded', async function () {
       console.warn('Gravatar fetch error:', err);
     }
     // fallback ảnh mặc định
-    return '../assets/default_avaatar.jpg';
+    return '/assets/default_avaatar.jpg';
   }
 
 
@@ -143,7 +143,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
   } catch (err) {
     console.error('Lỗi lấy user info:', err);
-    if (userAvatarImg) userAvatarImg.src = '../assets/default_avaatar.jpg';
+    if (userAvatarImg) userAvatarImg.src = '/assets/default_avaatar.jpg';
   }
 
   const params = new URLSearchParams(window.location.search);

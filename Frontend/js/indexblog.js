@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Tạo từng blog-item
   function createBlogItem(blog) {
     const contentText = stripHTML(blog.content || "");
-    const placeholder = "../assets/login_pic.jpg";
+    const placeholder = "/assets/login_pic.jpg";
     let realImage = placeholder;
 
     if (blog.thumbnailImage) {
