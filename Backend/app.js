@@ -26,7 +26,7 @@ mongoose.connect(process.env.MONGO_URI)
 
 
 // Session middleware
-aapp.use(session({
+app.use(session({
   name: 'sid',
   secret: process.env.SESSION_SECRET || 'default_secret_key',
   resave: false,
