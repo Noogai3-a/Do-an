@@ -15,6 +15,7 @@ const allowedOrigins = [
   'http://127.0.0.1:5000',
   'https://do-an-zaqp.vercel.app',
   'https://do-an-khaki.vercel.app/',
+  'https://backend-yl09.onrender.com',
   /\.vercel\.app$/  // Regex để cho phép tất cả domain phụ từ vercel
 ];
 app.set('trust proxy', 1); // Rất quan trọng khi dùng secure cookie trên Render
