@@ -1,7 +1,8 @@
+const BACKEND = 'https://backend-yl09.onrender.com';
 document.addEventListener('DOMContentLoaded', async () => {
   // Cập nhật thống kê từ API
   try {
-    const res = await fetch('/api/admin/stats', {
+    const res = await fetch(`${BACKEND}/api/admin/stats`, {
     credentials: 'include' // ← THÊM DÒNG NÀY
     });
     const data = await res.json();
@@ -110,7 +111,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   async function loadItems() {
     try {
-      const BACKEND = 'https://backend-yl09.onrender.com';
+      
       const res = await fetch(`${BACKEND}/api/admin/stats`, { credentials: 'include' });
       if (!res.ok) throw new Error('Lỗi khi tải dữ liệu');
       const data = await res.json();
@@ -226,13 +227,14 @@ function showConfirmModal(message, onConfirm) {
     onConfirm();
   });
 }
+// Cuối file adminTQBlog.js
 (async function testDebug() {
   try {
     const res = await fetch('https://backend-yl09.onrender.com/api/debug-session', {
       credentials: 'include'
     });
     const data = await res.json();
-    console.log('🛈 Debug session:', data);
+    console.log('🟡 Debug session:', data);
   } catch (err) {
     console.error('❌ Lỗi khi gọi debug-session:', err);
   }
