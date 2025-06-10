@@ -26,22 +26,23 @@ mongoose.connect(process.env.MONGO_URI)
 
 
 // Session middleware
-app.use(session({
-  name: "sid", // tên cookie
+aapp.use(session({
+  name: 'sid',
   secret: process.env.SESSION_SECRET || 'default_secret_key',
   resave: false,
   saveUninitialized: false,
+  cookie: {
+    httpOnly: true,
+    secure: true,          // ✅ phải true vì dùng HTTPS (Render)
+    sameSite: 'none',      // ✅ bắt buộc để gửi cookie cross-origin (Vercel)
+    maxAge: 1000 * 60 * 60 // 1 giờ
+  },
   store: MongoStore.create({
     mongoUrl: process.env.MONGO_URI,
     collectionName: 'sessions'
-  }),
-  cookie: {
-    maxAge: 1000 * 60 * 60,  // 1 giờ
-    httpOnly: true,
-    secure: true,           // ✅ TRUE vì deploy HTTPS trên Render
-    sameSite: "none"        // ✅ CẦN để chia sẻ cookie cross-origin với Vercel
-  }
+  })
 }));
+
 
 // Serve static files (HTML, CSS, JS)
 app.use(express.static(path.join(__dirname, '../Frontend')));
