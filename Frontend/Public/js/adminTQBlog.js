@@ -110,9 +110,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   async function loadItems() {
     try {
-      const res = await fetch('/api/admin/blogs', {
-            credentials: 'include',
-        });
+      const BACKEND = 'https://backend-yl09.onrender.com';
+      const res = await fetch(`${BACKEND}/api/admin/stats`, { credentials: 'include' });
       if (!res.ok) throw new Error('Lỗi khi tải dữ liệu');
       const data = await res.json();
 
