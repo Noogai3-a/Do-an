@@ -81,8 +81,10 @@ const documentRoutes = require('./routes/reviewDocumentRoutes');
 const reviewDocRoutes = require('./routes/documentRoutes');
 
 
-
+app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api', proxyRoutes);
+
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -161,10 +163,9 @@ app.get('/upload', authMiddleware, (req, res) => {
     res.sendFile(path.join(__dirname, '../Frontend/Public/upload1.html'));
 });
 
-app.use('/api/auth', authRoutes);
-app.use('/api/blogs', blogRoutes);
+
 app.use('/api/admin', adminRoutes);
-app.use('/api', proxyRoutes);
+app.use('/api/blogs', blogRoutes);
 app.use('/api/documents', documentRoutes);
 
 // Route trả thông tin người dùng
