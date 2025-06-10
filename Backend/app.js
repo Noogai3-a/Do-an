@@ -9,18 +9,27 @@ require('dotenv').config();
 const app = express();
 
 // CORS: Cho phép frontend truy cập với session
-app.use(cors({
-    origin: [
+const allowedOrigins = [
   'http://localhost:5500',
   'http://127.0.0.1:5500',
   'http://127.0.0.1:5000',
   'https://do-an-zaqp.vercel.app',
-  'https://do-an-zaqp-7gmoex8ou-noogai3-as-projects.vercel.app'
-],
-    credentials: true, // Cần có để gửi cookie qua frontend
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  /\.vercel\.app$/  // Regex để cho phép tất cả domain phụ từ vercel
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin) || /\.vercel\.app$/.test(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
+
 
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
