@@ -189,3 +189,10 @@ app.get('/api/user-info', authMiddleware, (req, res) => {
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.get('/api/debug-session', (req, res) => {
+  res.json({
+    session: req.session,
+    cookies: req.cookies
+  });
+});
+
