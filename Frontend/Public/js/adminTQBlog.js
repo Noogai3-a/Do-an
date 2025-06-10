@@ -225,3 +225,15 @@ function showConfirmModal(message, onConfirm) {
     onConfirm();
   });
 }
+(async function testDebug() {
+  try {
+    const res = await fetch('https://backend-yl09.onrender.com/api/debug-session', {
+      credentials: 'include'
+    });
+    const data = await res.json();
+    console.log('🛈 Debug session:', data);
+  } catch (err) {
+    console.error('❌ Lỗi khi gọi debug-session:', err);
+  }
+})();
+
