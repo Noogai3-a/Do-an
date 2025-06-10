@@ -12,6 +12,8 @@ const app = express();
 app.use(cors({
     origin: ['http://localhost:5500', 'http://127.0.0.1:5500', 'http://127.0.0.1:5000', 'https://do-an-zaqp.vercel.app/', 'https://do-an-zaqp-i576hb1sh-noogai3-as-projects.vercel.app/'],
     credentials: true, // Cần có để gửi cookie qua frontend
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
 app.use(express.json({ limit: '10mb' }));
@@ -25,18 +27,20 @@ mongoose.connect(process.env.MONGO_URI)
 
 // Session middleware
 app.use(session({
-    secret: process.env.SESSION_SECRET || 'default_secret_key',
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        maxAge: 1000 * 60 * 60,
-        httpOnly: true,
-        secure: false, // true nếu dùng HTTPS
-    },
-    store: MongoStore.create({
-        mongoUrl: process.env.MONGO_URI,
-        collectionName: 'sessions'
-    })
+  name: "sid", // tên cookie
+  secret: process.env.SESSION_SECRET || 'default_secret_key',
+  resave: false,
+  saveUninitialized: false,
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGO_URI,
+    collectionName: 'sessions'
+  }),
+  cookie: {
+    maxAge: 1000 * 60 * 60,  // 1 giờ
+    httpOnly: true,
+    secure: true,           // ✅ TRUE vì deploy HTTPS trên Render
+    sameSite: "none"        // ✅ CẦN để chia sẻ cookie cross-origin với Vercel
+  }
 }));
 
 // Serve static files (HTML, CSS, JS)
