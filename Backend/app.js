@@ -87,8 +87,6 @@ const proxyRoutes = require('./routes/proxy');
 const uploadRoutes = require('./routes/uploadDocumentRoutes');
 const documentRoutes = require('./routes/reviewDocumentRoutes');
 const reviewDocRoutes = require('./routes/documentRoutes');
-const userRouter = require('./routes/userRouter');
-app.use('/', userRouter);
 
 
 app.use('/api/auth', authRoutes);
