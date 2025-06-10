@@ -1,0 +1,15 @@
+// routes/adminRouter.js
+const express = require('express');
+const router = express.Router();
+const { requireLogin, requireAdmin } = require('../middleware/authMiddleware');
+
+// Các route dành riêng cho ADMIN
+router.get('/adminQL', requireLogin, requireAdmin, (req, res) => {
+  res.json({ msg: 'Đây là trang quản lý của admin' });
+});
+
+router.get('/admintk', requireLogin, requireAdmin, (req, res) => {
+  res.json({ msg: 'Đây là trang thông tin tài khoản admin' });
+});
+
+module.exports = router;
