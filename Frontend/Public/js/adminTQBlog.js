@@ -110,7 +110,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   async function loadItems() {
     try {
-      const res = await fetch('/api/admin/blogs');
+      const res = await fetch('/api/admin/blogs', {
+            credentials: 'include',
+        });
       if (!res.ok) throw new Error('Lỗi khi tải dữ liệu');
       const data = await res.json();
 

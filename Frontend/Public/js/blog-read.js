@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   async function resolveAvatar(email) {
     const url = getGravatarUrl(email);
     try {
-      const res = await fetch(`${url}?d=404`);
+      const res = await fetch(`${url}?d=404`,{ credentials: 'include'});
       if (res.ok) return url;
     } catch (err) {
       console.warn('Gravatar fetch error:', err);
@@ -172,7 +172,9 @@ document.addEventListener('DOMContentLoaded', async function () {
   async function loadComments() {
     const isPreview = getQueryParam("preview") === "true";
       try {
-        const res = await fetch(`/api/blogs/${blogId}?preview=${isPreview}`);
+        const res = await fetch(`/api/blogs/${blogId}?preview=${isPreview}`,
+          {credentials: 'include'}
+        );
         if (!res.ok) throw new Error('Không thể tải bài viết');
         const data = await res.json();
 

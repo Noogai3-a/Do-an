@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const subjectTypeSlug = categoryKey;
             const subjectNameSlug = subject.slug;
 
-            fetch(`/api/documents/by-subject/${encodeURIComponent(subjectTypeSlug)}/${encodeURIComponent(subjectNameSlug)}`)
+            fetch(`/api/documents/by-subject/${encodeURIComponent(subjectTypeSlug)}/${encodeURIComponent(subjectNameSlug)}`,{credentials: 'include'})
               .then(res => {
                 if (!res.ok) throw new Error('Lỗi tải tài liệu');
                 return res.json();

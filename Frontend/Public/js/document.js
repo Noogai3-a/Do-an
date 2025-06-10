@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
-  fetch(`/api/documents/${documentId}`)
+  fetch(`/api/documents/${documentId}`,{credentials: 'include'})
     .then(res => {
       if (!res.ok) throw new Error('Không tải được tài liệu');
       return res.json();

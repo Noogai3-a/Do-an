@@ -33,12 +33,7 @@ app.use(cors({
 
 
 app.use(express.json({ limit: '10mb' }));
-app.get('/api/debug-session', (req, res) => {
-  res.json({
-    session: req.session,
-    cookies: req.cookies
-  });
-});
+
 
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
@@ -66,7 +61,12 @@ app.use(session({
   })
 }));
 
-
+app.get('/api/debug-session', (req, res) => {
+  res.json({
+    session: req.session,
+    cookies: req.cookies
+  });
+});
 // Serve static files (HTML, CSS, JS)
 app.use(express.static(path.join(__dirname, '../Frontend')));
 app.use('/json', express.static(path.join(__dirname, 'json')));

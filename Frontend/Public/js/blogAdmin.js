@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
   async function loadItems() {
     try {
       // Gọi API mới gộp chung blog + document
-      const res = await fetch('/api/admin/blogs');
+      const res = await fetch('/api/admin/blogs', {credentials: 'include'});
       if (!res.ok) throw new Error('Lỗi khi tải dữ liệu');
       const data = await res.json();
 

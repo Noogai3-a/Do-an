@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Load danh sách documents từ API
   async function loadDocs() {
     try {
-      const res = await fetch('/api/documents');
+      const res = await fetch('/api/documents',{credentials: 'include'});
       if (!res.ok) throw new Error('Lỗi khi tải danh sách tài liệu');
       const data = await res.json();
 
