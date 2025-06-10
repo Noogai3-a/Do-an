@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
   let userInfo = null;
   try {
-    const res = await fetch('/api/user-info', { credentials: 'include' });
+    const res = await fetch('https://backend-yl09.onrender.com/api/user-info', { credentials: 'include' });
     if (res.ok) {
       userInfo = await res.json();
       if (userInfo?.email && userAvatarImg) {
@@ -172,7 +172,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   async function loadComments() {
     const isPreview = getQueryParam("preview") === "true";
       try {
-        const res = await fetch(`/api/blogs/${blogId}?preview=${isPreview}`,
+        const res = await fetch(`https://backend-yl09.onrender.com/api/blogs/${blogId}?preview=${isPreview}`,
           {credentials: 'include'}
         );
         if (!res.ok) throw new Error('Không thể tải bài viết');
@@ -207,7 +207,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 
     try {
-      const res = await fetch(`/api/blogs/${blogId}/comments`, {
+      const res = await fetch(`https://backend-yl09.onrender.com/api/blogs/${blogId}/comments`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',

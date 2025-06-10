@@ -1,3 +1,4 @@
+const BACKEND = 'https://backend-yl09.onrender.com';
 document.addEventListener('DOMContentLoaded', () => {
   const tableBody = document.querySelector('.documents-table table tbody');
   const loading = document.getElementById('loading');
@@ -96,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
   async function loadItems() {
     try {
       // Gọi API mới gộp chung blog + document
-      const res = await fetch('/api/admin/blogs', {credentials: 'include'});
+      const res = await fetch(`${BACKEND}/api/admin/blogs`, {credentials: 'include'});
       if (!res.ok) throw new Error('Lỗi khi tải dữ liệu');
       const data = await res.json();
 

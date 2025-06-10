@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Duyệt document
   async function approveDoc(id) {
     try {
-      const res = await fetch(`/api/admin/approve-document/${id}`, {
+      const res = await fetch(`https://backend-yl09.onrender.com/api/admin/approve-document/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' }
       });

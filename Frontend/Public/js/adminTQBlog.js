@@ -138,7 +138,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   async function deleteBlog(id) {
     try {
-      const res = await fetch(`/api/blogs/${id}`, {
+      const res = await fetch(`https://backend-yl09.onrender.com/api/blogs/${id}`, {
         method: 'DELETE',
         credentials: 'include'
       });

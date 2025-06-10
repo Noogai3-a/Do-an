@@ -204,7 +204,7 @@ async function submitPost() {
     }
 
     try {
-        const response = await fetch('/api/blogs', {
+        const response = await fetch('https://backend-yl09.onrender.com/api/blogs', {
             method: 'POST',
             credentials: 'include',
             body: formData
