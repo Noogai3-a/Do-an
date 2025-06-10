@@ -1,7 +1,9 @@
 document.addEventListener('DOMContentLoaded', async () => {
   // Cập nhật thống kê từ API
   try {
-    const res = await fetch('/api/admin/stats');
+    const res = await fetch('/api/admin/stats', {
+    credentials: 'include' // ← THÊM DÒNG NÀY
+    });
     const data = await res.json();
 
     document.getElementById('total-documents').textContent = data.total;
