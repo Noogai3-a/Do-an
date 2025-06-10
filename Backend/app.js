@@ -16,6 +16,7 @@ const allowedOrigins = [
   'https://do-an-zaqp.vercel.app',
   /\.vercel\.app$/  // Regex để cho phép tất cả domain phụ từ vercel
 ];
+app.set('trust proxy', 1); // Rất quan trọng khi dùng secure cookie trên Render
 
 app.use(cors({
   origin: function (origin, callback) {
