@@ -177,6 +177,7 @@ app.get('/upload', authMiddleware, (req, res) => {
 app.use('/api/admin', adminRoutes);
 app.use('/api/blogs', blogRoutes);
 app.use('/api/documents', documentRoutes);
+app.use('/uploads/previews', express.static(path.join(__dirname, 'uploads/previews')));
 
 // Route trả thông tin người dùng
 app.get('/api/user-info', authMiddleware, (req, res) => {
