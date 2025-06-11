@@ -148,7 +148,7 @@ fetch('https://backend-yl09.onrender.com/api/user-info', { credentials: 'include
         showContentAfterDelay(); // Vẫn hiển thị nội dung sau 1s dù có lỗi
     });
      // Nếu ở userql/usertk mà không đăng nhập → redirect
-    if (window.location.pathname.includes('userql') || window.location.pathname.includes('usertk')) {
+    if (window.location.pathname.includes('userql') || window.location.pathname.includes('usertk') || window.location.pathname.includes('admintl') || window.location.pathname.includes('admintq')) {
         fetch('https://backend-yl09.onrender.com/api/user-info', {
             credentials: 'include'
         })
