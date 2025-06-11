@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", async () => {
     try {
-        const response = await fetch('/api/user-info', {
+        const response = await fetch('https://backend-yl09.onrender.com/api/user-info', {
             credentials: 'include' // rất quan trọng để gửi cookie
         });
 

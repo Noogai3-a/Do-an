@@ -11,8 +11,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   function proxyImageURL(url) {
-    return `/api/proxy-image?url=${encodeURIComponent(url)}`;
+  return `https://backend-yl09.onrender.com/api/proxy-image?url=${encodeURIComponent(url)}`;
   }
+
 
   function stripHTML(html) {
     const div = document.createElement("div");

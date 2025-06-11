@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
-  fetch(`/api/documents/${documentId}`)
+  fetch(`https://backend-yl09.onrender.com/api/documents/${documentId}`,{credentials: 'include'})
     .then(res => {
       if (!res.ok) throw new Error('Không tải được tài liệu');
       return res.json();

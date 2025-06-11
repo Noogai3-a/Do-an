@@ -1,7 +1,10 @@
+const BACKEND = 'https://backend-yl09.onrender.com';
 document.addEventListener('DOMContentLoaded', async () => {
   // Cập nhật thống kê từ API
   try {
-    const res = await fetch('/api/admin/stats');
+    const res = await fetch(`${BACKEND}/api/admin/stats`, {
+    credentials: 'include' // ← THÊM DÒNG NÀY
+    });
     const data = await res.json();
 
     document.getElementById('total-documents').textContent = data.total;
@@ -107,34 +110,36 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   async function loadItems() {
-    try {
-      const res = await fetch('/api/admin/blogs');
-      if (!res.ok) throw new Error('Lỗi khi tải dữ liệu');
-      const data = await res.json();
+  try {
+    const res = await fetch(`${BACKEND}/api/admin/blogs`, {
+      credentials: 'include'
+    });
+    if (!res.ok) throw new Error('Lỗi khi tải dữ liệu');
+    const data = await res.json();
 
-      const { approvedItems = [], pendingItems = [] } = data;
-      allItems = [...pendingItems, ...approvedItems];
+    const { approvedItems = [], pendingItems = [] } = data;
+    allItems = [...pendingItems, ...approvedItems];
 
-      if (allItems.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Không có tài liệu</td></tr>';
-        paginationContainer.style.display = 'none';
-      } else {
-        paginationContainer.style.display = 'flex';
-        currentPage = 1;
-        renderTable();
-        renderPagination();
-      }
-
-      addEventListeners();
-    } catch (err) {
-      console.error('Lỗi khi load blog:', err);
-      tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:red;">Lỗi khi tải dữ liệu</td></tr>';
+    if (allItems.length === 0) {
+      tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Không có tài liệu</td></tr>';
+      paginationContainer.style.display = 'none';
+    } else {
+      paginationContainer.style.display = 'flex';
+      currentPage = 1;
+      renderTable();
+      renderPagination();
     }
+
+    addEventListeners();
+  } catch (err) {
+    console.error('Lỗi khi load blog:', err);
+    tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:red;">Lỗi khi tải dữ liệu</td></tr>';
+  }
   }
 
   async function deleteBlog(id) {
     try {
-      const res = await fetch(`/api/blogs/${id}`, {
+      const res = await fetch(`https://backend-yl09.onrender.com/api/blogs/${id}`, {
         method: 'DELETE',
         credentials: 'include'
       });
@@ -223,3 +228,16 @@ function showConfirmModal(message, onConfirm) {
     onConfirm();
   });
 }
+// Cuối file adminTQBlog.js
+(async function testDebug() {
+  try {
+    const res = await fetch('https://backend-yl09.onrender.com/api/debug-session', {
+      credentials: 'include'
+    });
+    const data = await res.json();
+    console.log('🟡 Debug session:', data);
+  } catch (err) {
+    console.error('❌ Lỗi khi gọi debug-session:', err);
+  }
+})();
+

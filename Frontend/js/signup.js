@@ -86,7 +86,8 @@ document.addEventListener("DOMContentLoaded", function() {
             const res = await fetch(`${backendURL}/api/auth/send-otp`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email })
+                body: JSON.stringify({ email }),
+                credentials: 'include'
             });
 
             const data = await res.json();
@@ -154,7 +155,8 @@ document.addEventListener("DOMContentLoaded", function() {
             const regRes = await fetch(`${backendURL}/api/auth/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
+                body: JSON.stringify(formData),
+                credentials: 'include'
             });
 
             const regText = await regRes.text();
