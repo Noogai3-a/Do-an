@@ -3,7 +3,7 @@
   "rewrites": [
     { "source": "/", "destination": "/index.html" },
     { "source": "/blog", "destination": "/blog.html" },
-    { "source": "/document", "destination": "/document.html" },
+    { "source": "/document", "destination": "/standard.html" },
     { "source": "/login", "destination": "/login.html" },
     { "source": "/signup", "destination": "/signup.html" },
     { "source": "/reset", "destination": "/reset.html" },
