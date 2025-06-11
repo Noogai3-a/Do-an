@@ -88,4 +88,16 @@ exports.getPopularDocuments = async (req, res) => {
   }
 };
 
+exports.approveDocument = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const doc = await Document.findByIdAndUpdate(id, { status: 'approved' }, { new: true });
+    if (!doc) return res.status(404).json({ error: 'Document not found' });
+    res.json({ success: true, message: 'Tài liệu đã được duyệt', doc });
+  } catch (err) {
+    console.error('Lỗi khi duyệt tài liệu:', err);
+    res.status(500).json({ error: 'SERVER_ERROR' });
+  }
+};
+
 
