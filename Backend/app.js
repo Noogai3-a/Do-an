@@ -13,7 +13,7 @@ const allowedOrigins = [
   'http://localhost:5500',
   'http://127.0.0.1:5500',
   'http://127.0.0.1:5000',
-  'https://do-an-zaqp.vercel.app',
+  'https://nhom11nt208p24.vercel.app/',
   'https://do-an-khaki.vercel.app/',
   'https://backend-yl09.onrender.com',
   /\.vercel\.app$/  // Regex để cho phép tất cả domain phụ từ vercel
