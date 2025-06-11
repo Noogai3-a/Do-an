@@ -17,9 +17,5 @@
     { "source": "/upload1", "destination": "/upload1.html" },
     { "source": "/standard", "destination": "/standard.html" },
     { "source": "/template", "destination": "/template.html" }
-  ],
-  "builds": [],
-  "routes": [
-    { "src": "/(.*)", "dest": "/$1" }
   ]
 }
