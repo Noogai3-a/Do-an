@@ -110,30 +110,31 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   async function loadItems() {
-    try {
-      
-      const res = await fetch(`${BACKEND}/api/admin/stats`, { credentials: 'include' });
-      if (!res.ok) throw new Error('Lỗi khi tải dữ liệu');
-      const data = await res.json();
+  try {
+    const res = await fetch(`${BACKEND}/api/admin/blogs`, {
+      credentials: 'include'
+    });
+    if (!res.ok) throw new Error('Lỗi khi tải dữ liệu');
+    const data = await res.json();
 
-      const { approvedItems = [], pendingItems = [] } = data;
-      allItems = [...pendingItems, ...approvedItems];
+    const { approvedItems = [], pendingItems = [] } = data;
+    allItems = [...pendingItems, ...approvedItems];
 
-      if (allItems.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Không có tài liệu</td></tr>';
-        paginationContainer.style.display = 'none';
-      } else {
-        paginationContainer.style.display = 'flex';
-        currentPage = 1;
-        renderTable();
-        renderPagination();
-      }
-
-      addEventListeners();
-    } catch (err) {
-      console.error('Lỗi khi load blog:', err);
-      tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:red;">Lỗi khi tải dữ liệu</td></tr>';
+    if (allItems.length === 0) {
+      tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Không có tài liệu</td></tr>';
+      paginationContainer.style.display = 'none';
+    } else {
+      paginationContainer.style.display = 'flex';
+      currentPage = 1;
+      renderTable();
+      renderPagination();
     }
+
+    addEventListeners();
+  } catch (err) {
+    console.error('Lỗi khi load blog:', err);
+    tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:red;">Lỗi khi tải dữ liệu</td></tr>';
+  }
   }
 
   async function deleteBlog(id) {
