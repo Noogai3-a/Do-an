@@ -60,23 +60,26 @@ const checkScreenSize = () => {
     }
 };
 document.addEventListener('DOMContentLoaded', () => {
-    
+
     const authButtons = document.getElementById('auth-buttons');
     const userInfo = document.getElementById('user-info');
     const usernameEl = document.getElementById('username');
     const loading = document.getElementById('loading');
     const mainContent = document.getElementById('main');
     checkScreenSize();
-     // 🔒 Nếu đang ở userql/usertk mà không có session → redirect về index
+    // 🔒 Nếu đang ở userql/usertk mà không có session → redirect về index
     if (window.location.pathname.includes('userql') || window.location.pathname.includes('usertk')) {
         fetch('https://backend-yl09.onrender.com/api/user-info', {
             credentials: 'include'
         })
-        .then(res => {
-            if (res.status === 401) {
-                window.location.href = '/';
-            }
-        });
+            .then(res => {
+                if (res.status === 401) {
+                    window.location.href = '/';
+                    authButtons.style.display = 'block';
+                    userInfo.style.display = 'none';
+                    return;
+                }
+            });
     }
 
     const setupLogoutListener = () => {
@@ -86,30 +89,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 e.preventDefault();
 
                 try {
-                    await fetch('https://backend-yl09.onrender.com/api/auth/logout', {
+                    const res = await fetch('https://backend-yl09.onrender.com/api/auth/logout', {
                         method: 'GET',
                         credentials: 'include'
                     });
 
-                    // Sau khi logout thành công:
                     localStorage.removeItem('user');
 
-                    // Nếu đang ở userql hoặc usertk thì chuyển về index luôn
+                    // 🧠 Nếu đang ở trang nội bộ (userQL, userTK), chuyển về /
                     const currentPath = window.location.pathname.toLowerCase();
                     if (currentPath.includes('userql') || currentPath.includes('usertk')) {
                         window.location.href = '/';
                     } else {
-                        // Nếu không thì chỉ reload lại để cập nhật trạng thái
+                        // 🔄 Nếu đang ở trang ngoài, chỉ cần reload để cập nhật UI
                         window.location.reload();
                     }
-
                 } catch (err) {
                     console.error('Lỗi khi đăng xuất:', err);
                 }
             });
-
         }
     };
+
 
     const showContentAfterDelay = (callback) => {
         setTimeout(() => {
