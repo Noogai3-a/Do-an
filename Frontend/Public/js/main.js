@@ -75,9 +75,6 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(res => {
                 if (res.status === 401) {
                     window.location.href = '/';
-                    authButtons.style.display = 'block';
-                    userInfo.style.display = 'none';
-                    return;
                 }
             });
     }
@@ -85,142 +82,157 @@ document.addEventListener('DOMContentLoaded', () => {
     const setupLogoutListener = () => {
         const logoutBtn = document.getElementById("logout-btn");
         if (logoutBtn) {
-            logoutBtn.addEventListener('click', async (e) => {
+            logoutBtn.addEventListener('click', (e) => {
                 e.preventDefault();
+                localStorage.removeItem('user');
 
-                try {
-                    const res = await fetch('https://backend-yl09.onrender.com/api/auth/logout', {
-                        method: 'GET',
-                        credentials: 'include'
-                    });
-
-                    localStorage.removeItem('user');
-
-                    // 🧠 Nếu đang ở trang nội bộ (userQL, userTK), chuyển về /
-                    const currentPath = window.location.pathname.toLowerCase();
-                    if (currentPath.includes('userql') || currentPath.includes('usertk')) {
-                        window.location.href = '/';
+                fetch('https://backend-yl09.onrender.com/api/auth/logout', {
+                    method: 'GET',
+                    credentials: 'include'
+                })
+                .then(res => {
+                    if (res.ok) {
+                        // 👉 Nếu đang ở userQL/userTK thì chuyển sang index
+                        if (window.location.pathname.includes('userql') || window.location.pathname.includes('usertk')) {
+                            window.location.href = '/';
+                        } else {
+                            window.location.reload(); // reload để cập nhật UI
+                        }
                     } else {
-                        // 🔄 Nếu đang ở trang ngoài, chỉ cần reload để cập nhật UI
-                        window.location.reload();
+                        console.error('Logout failed');
                     }
-                } catch (err) {
-                    console.error('Lỗi khi đăng xuất:', err);
-                }
+                })
+                .catch(err => console.error('Lỗi khi đăng xuất:', err));
             });
         }
     };
 
 
-    const showContentAfterDelay = (callback) => {
-        setTimeout(() => {
-            if (loading) loading.style.display = 'none';
-            if (mainContent) mainContent.style.display = 'block';
-            if (callback) callback();
-        }, 1000);
-    };
 
-    // Kiểm tra khi thay đổi kích thước cửa sổ
-    window.addEventListener('resize', checkScreenSize);
+const showContentAfterDelay = (callback) => {
+    setTimeout(() => {
+        if (loading) loading.style.display = 'none';
+        if (mainContent) mainContent.style.display = 'block';
+        if (callback) callback();
+    }, 1000);
+};
 
-    fetch('https://backend-yl09.onrender.com/api/user-info', { credentials: 'include' })
-        .then(res => res.status === 401 ? null : res.json())
-        .then(data => {
-            showContentAfterDelay(() => {
-                if (data && data.username) {
-                    usernameEl.textContent = data.username;
-                    authButtons.style.display = 'none';
-                    userInfo.style.display = 'block';
+// Kiểm tra khi thay đổi kích thước cửa sổ
+window.addEventListener('resize', checkScreenSize);
 
-                    const dropdownMenu = document.querySelector('.dropdown-menu');
-                    if (dropdownMenu && data.role === "admin") {
-                        dropdownMenu.innerHTML = `
+fetch('https://backend-yl09.onrender.com/api/user-info', { credentials: 'include' })
+    .then(res => res.status === 401 ? null : res.json())
+    .then(data => {
+        showContentAfterDelay(() => {
+            if (data && data.username) {
+                usernameEl.textContent = data.username;
+                authButtons.style.display = 'none';
+                userInfo.style.display = 'block';
+
+                const dropdownMenu = document.querySelector('.dropdown-menu');
+                if (dropdownMenu && data.role === "admin") {
+                    dropdownMenu.innerHTML = `
                             <a href="/adminTQ">Quản lý tổng quan</a>
                             <a href="/adminTL">Quản lý tài liệu/blog</a>
                             <a href="#" id="logout-btn">Đăng xuất</a>
                         `;
-                    }
-
-                    // Gán lại sự kiện sau khi innerHTML đã được cập nhật (dù là user hay admin)
-                    setupLogoutListener();
                 }
-            });
+
+                // Gán lại sự kiện sau khi innerHTML đã được cập nhật (dù là user hay admin)
+                setupLogoutListener();
+            }
+        });
+    })
+    .catch(err => {
+        console.error('Lỗi khi lấy thông tin người dùng:', err);
+        showContentAfterDelay(); // Vẫn hiển thị nội dung sau 1s dù có lỗi
+    });
+     // Nếu ở userql/usertk mà không đăng nhập → redirect
+    if (window.location.pathname.includes('userql') || window.location.pathname.includes('usertk')) {
+        fetch('https://backend-yl09.onrender.com/api/user-info', {
+            credentials: 'include'
+        })
+        .then(res => {
+            if (res.status === 401) {
+                window.location.href = '/';
+            }
         })
         .catch(err => {
-            console.error('Lỗi khi lấy thông tin người dùng:', err);
-            showContentAfterDelay(); // Vẫn hiển thị nội dung sau 1s dù có lỗi
+            console.error('Lỗi xác thực người dùng:', err);
+            window.location.href = '/';
         });
-
-    const input = document.getElementById('search-input');
-    const suggestions = document.getElementById('search-suggestions');
-    const typeSelect = document.getElementById('search-type');
-    let timeoutId;
-
-    if (!input || !suggestions || !typeSelect) {
-        console.warn('Search elements not found in DOM.');
-        return; // Không chạy tiếp nếu thiếu element
     }
 
-    const fetchSuggestions = (query = '') => {
-        const type = typeSelect.value;
-        if (type !== 'blog') {
-            suggestions.style.display = 'none';
-            return;
-        }
+const input = document.getElementById('search-input');
+const suggestions = document.getElementById('search-suggestions');
+const typeSelect = document.getElementById('search-type');
+let timeoutId;
 
-        // Gọi API tùy query hoặc default
-        const url = query
-            ? `https://backend-yl09.onrender.com/api/blogs/search?q=${encodeURIComponent(query)}`
-            : `https://backend-yl09.onrender.com/api/blogs/search?default=true`;
+if (!input || !suggestions || !typeSelect) {
+    console.warn('Search elements not found in DOM.');
+    return; // Không chạy tiếp nếu thiếu element
+}
 
-        fetch(url)
-            .then(res => res.json())
-            .then(data => {
-                suggestions.innerHTML = '';
-                if (!data.length) {
-                    suggestions.style.display = 'none';
-                    return;
-                }
-
-                data.forEach(blog => {
-                    const li = document.createElement('li');
-                    li.textContent = blog.title;
-                    li.addEventListener('click', () => {
-                        window.location.href = `/blog-read?post=${blog._id}`;
-                    });
-                    suggestions.appendChild(li);
-                });
-
-                suggestions.style.display = 'block';
-            })
-            .catch(err => {
-                console.error('Lỗi lấy blog:', err);
-                suggestions.style.display = 'none';
-            });
-    };
-
-    input.addEventListener('focus', () => {
-        if (typeSelect.value === 'blog') {
-            fetchSuggestions();
-        }
-    });
-
-    input.addEventListener('input', () => {
-        clearTimeout(timeoutId);
-        timeoutId = setTimeout(() => {
-            fetchSuggestions(input.value.trim());
-        }, 300);
-    });
-
-    document.addEventListener('click', (e) => {
-        if (!e.target.closest('.search-bar')) {
-            suggestions.style.display = 'none';
-        }
-    });
-
-    // Ẩn suggestion khi chọn loại khác
-    typeSelect.addEventListener('change', () => {
+const fetchSuggestions = (query = '') => {
+    const type = typeSelect.value;
+    if (type !== 'blog') {
         suggestions.style.display = 'none';
-    });
+        return;
+    }
+
+    // Gọi API tùy query hoặc default
+    const url = query
+        ? `https://backend-yl09.onrender.com/api/blogs/search?q=${encodeURIComponent(query)}`
+        : `https://backend-yl09.onrender.com/api/blogs/search?default=true`;
+
+    fetch(url)
+        .then(res => res.json())
+        .then(data => {
+            suggestions.innerHTML = '';
+            if (!data.length) {
+                suggestions.style.display = 'none';
+                return;
+            }
+
+            data.forEach(blog => {
+                const li = document.createElement('li');
+                li.textContent = blog.title;
+                li.addEventListener('click', () => {
+                    window.location.href = `/blog-read?post=${blog._id}`;
+                });
+                suggestions.appendChild(li);
+            });
+
+            suggestions.style.display = 'block';
+        })
+        .catch(err => {
+            console.error('Lỗi lấy blog:', err);
+            suggestions.style.display = 'none';
+        });
+};
+
+input.addEventListener('focus', () => {
+    if (typeSelect.value === 'blog') {
+        fetchSuggestions();
+    }
+});
+
+input.addEventListener('input', () => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => {
+        fetchSuggestions(input.value.trim());
+    }, 300);
+});
+
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('.search-bar')) {
+        suggestions.style.display = 'none';
+    }
+});
+
+// Ẩn suggestion khi chọn loại khác
+typeSelect.addEventListener('change', () => {
+    suggestions.style.display = 'none';
+});
 });
 
