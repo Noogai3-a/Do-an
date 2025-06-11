@@ -1,8 +1,8 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const latestContainer = document.querySelector(".section:nth-of-type(1) .document-grid");
-  const popularContainer = document.querySelector(".section:nth-of-type(2) .document-grid");
+const BACKEND_URL = 'https://backend-yl09.onrender.com/api';
 
-  const BACKEND_URL = 'https://backend-yl09.onrender.com'; // 🛠️ Sửa tên đúng backend
+document.addEventListener("DOMContentLoaded", () => {
+  const latestContainer = document.getElementById("latest-documents");
+  const popularContainer = document.getElementById("popular-documents");
 
   function createDocumentHTML(doc) {
     const fileUrl = `${BACKEND_URL}/${doc.fileUrl.replace(/\\/g, '/')}`;
@@ -19,14 +19,18 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
   }
 
-  fetch(`${BACKEND_URL}/documents/latest`)
+  fetch(`${BACKEND_URL}/documents/latest`, {
+    credentials: 'include'
+  })
     .then(res => res.json())
     .then(data => {
       latestContainer.innerHTML = data.map(createDocumentHTML).join('');
     })
     .catch(err => console.error("❌ Lỗi tải tài liệu mới nhất:", err));
 
-  fetch(`${BACKEND_URL}/documents/popular`)
+  fetch(`${BACKEND_URL}/documents/popular`, {
+    credentials: 'include'
+  })
     .then(res => res.json())
     .then(data => {
       popularContainer.innerHTML = data.map(createDocumentHTML).join('');
