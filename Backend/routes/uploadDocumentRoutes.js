@@ -1,17 +1,17 @@
-// routes/uploadDocumentRoutes.js
-
 const express = require('express');
 const router = express.Router();
+const multer = require('multer');
+const uploadDocumentController = require('../controllers/uploadDocumentController');
 
-const upload = require('../middleware/upload');
-const uploadController = require('../controllers/uploadDocumentController');
-const { ensureAuthenticated } = require('../middleware/authMiddleware');
+// Lưu file vào thư mục uploads/
+const storage = multer.diskStorage({
+  destination: 'uploads/',
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + '-' + file.originalname);
+  }
+});
+const upload = multer({ storage });
 
-// [POST] /api/documents/upload
-router.post(
-  '/upload',
-  upload.single('file'),             
-  uploadController.uploadDocument
-);
+router.post('/upload', upload.single('file'), uploadDocumentController.uploadDocument);
 
 module.exports = router;

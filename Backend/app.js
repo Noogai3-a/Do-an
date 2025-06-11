@@ -152,7 +152,7 @@ app.get('/blog-post', authMiddleware,(req, res) => {
 });
 
 //Đăng tài liệu
-app.use('/api/upload-documents', uploadRoutes);         // chứa: POST upload
+app.use('/api/upload', uploadRoutes);         // chứa: POST upload
 
 //Duyệt tài liệu
 app.use('/api/review-documents', documentRoutes);       // chứa: /:id, duyệt/xóa document
