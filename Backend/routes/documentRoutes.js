@@ -8,4 +8,10 @@ router.get(
   documentController.getDocumentsBySubject
 );
 
+// [GET] /api/documents/latest
+router.get('/latest', documentController.getLatestDocuments);
+
+// [GET] /api/documents/popular
+router.get('/popular', documentController.getPopularDocuments);
+
 module.exports = router;

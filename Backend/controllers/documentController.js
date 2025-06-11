@@ -58,3 +58,34 @@ exports.getDocumentsBySubject = async (req, res) => {
   }
 };
 
+// Lấy tài liệu mới nhất (đã được duyệt)
+exports.getLatestDocuments = async (req, res) => {
+  try {
+    const documents = await Document.find({ status: 'approved' })
+      .sort({ uploadDate: -1 })    // Sắp xếp theo ngày upload giảm dần
+      .limit(6)
+      .lean();
+
+    res.status(200).json(documents);
+  } catch (error) {
+    console.error('[Lỗi getLatestDocuments]', error);
+    res.status(500).json({ message: 'Lỗi server khi lấy tài liệu mới nhất.' });
+  }
+};
+
+// Lấy tài liệu được xem nhiều nhất
+exports.getPopularDocuments = async (req, res) => {
+  try {
+    const documents = await Document.find({ status: 'approved' })
+      .sort({ viewCount: -1 })     // viewCount phải tồn tại trong schema
+      .limit(6)
+      .lean();
+
+    res.status(200).json(documents);
+  } catch (error) {
+    console.error('[Lỗi getPopularDocuments]', error);
+    res.status(500).json({ message: 'Lỗi server khi lấy tài liệu phổ biến.' });
+  }
+};
+
+
