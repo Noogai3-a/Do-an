@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const blogAdminController = require('../controllers/blogAdminController');
 const requireAdmin = require('../middleware/requireAdmin');
+const documentController = require('../controllers/documentController');
 
 router.get('/stats', requireAdmin, blogAdminController.getAdminStats);
 
