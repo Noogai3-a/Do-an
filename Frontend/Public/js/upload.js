@@ -178,7 +178,7 @@ document.addEventListener("DOMContentLoaded", function () {
     formData.append("file", file);
 
     try {
-      const response = await fetch(`https://backend-yl09.onrender.com/api/documents/upload`, {
+      const response = await fetch(`https://backend-yl09.onrender.com/api/upload-documents/upload`, {
         method: 'POST',
         credentials: 'include',
         body: formData
