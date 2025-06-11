@@ -123,8 +123,8 @@ document.addEventListener('DOMContentLoaded', () => {
   async function approveItem(id, type) {
     try {
       let url;
-      if(type === 'blog') url = `${BACKEND}/api/admin/approve-blog/${id}`;
-      else if(type === 'document') url = `${BACKEND}/api/admin/approve-document/${id}`;
+      if(type === 'blog') url = `https://backend-yl09.onrender.com/api/admin/approve-blog/${id}`;
+      else if(type === 'document') url = `https://backend-yl09.onrender.com/api/admin/approve-document/${id}`;
       else throw new Error('Loại tài liệu không hợp lệ');
 
       const res = await fetch(url, {
