@@ -123,12 +123,13 @@ document.addEventListener('DOMContentLoaded', () => {
   async function approveItem(id, type) {
     try {
       let url;
-      if(type === 'blog') url = `/api/admin/approve-blog/${id}`;
-      else if(type === 'document') url = `/api/admin/approve-document/${id}`;
+      if(type === 'blog') url = `${BACKEND}/api/admin/approve-blog/${id}`;
+      else if(type === 'document') url = `${BACKEND}/api/admin/approve-document/${id}`;
       else throw new Error('Loại tài liệu không hợp lệ');
 
       const res = await fetch(url, {
         method: 'PUT',
+        credentials: 'include',
         headers: { 'Content-Type': 'application/json' }
       });
       if (!res.ok) throw new Error('Duyệt tài liệu thất bại');
