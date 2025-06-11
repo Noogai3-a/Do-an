@@ -60,22 +60,24 @@ const checkScreenSize = () => {
     }
 };
 document.addEventListener('DOMContentLoaded', () => {
-    if (window.location.pathname.includes('userql') || window.location.pathname.includes('usertk')) {
-    fetch('https://backend-yl09.onrender.com/api/user-info', {
-        credentials: 'include'
-    })
-    .then(res => {
-        if (res.status === 401) {
-            window.location.href = '/'; // Nếu hết session → về index
-        }
-    });
-}
+    
     const authButtons = document.getElementById('auth-buttons');
     const userInfo = document.getElementById('user-info');
     const usernameEl = document.getElementById('username');
     const loading = document.getElementById('loading');
     const mainContent = document.getElementById('main');
     checkScreenSize();
+     // 🔒 Nếu đang ở userql/usertk mà không có session → redirect về index
+    if (window.location.pathname.includes('userql') || window.location.pathname.includes('usertk')) {
+        fetch('https://backend-yl09.onrender.com/api/user-info', {
+            credentials: 'include'
+        })
+        .then(res => {
+            if (res.status === 401) {
+                window.location.href = '/';
+            }
+        });
+    }
 
     const setupLogoutListener = () => {
         const logoutBtn = document.getElementById("logout-btn");
