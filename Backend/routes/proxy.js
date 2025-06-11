@@ -1,29 +1,17 @@
-// routes/proxy.js
 const express = require('express');
 const axios = require('axios');
 const router = express.Router();
 
 router.get('/proxy-image', async (req, res) => {
-  const imageUrl = req.query.url;
-  if (!imageUrl) {
-    return res.status(400).json({ msg: 'Missing image URL' });
-  }
+  const url = req.query.url;
+  if (!url) return res.status(400).send('Thiếu URL');
 
   try {
-    const response = await axios({
-      method: 'GET',
-      url: imageUrl,
-      responseType: 'stream',
-      headers: {
-        'User-Agent': 'Mozilla/5.0',
-      }
-    });
-
-    res.setHeader('Content-Type', response.headers['content-type']);
-    response.data.pipe(res);
-  } catch (error) {
-    console.error('Error proxy image:', error.message);
-    res.status(500).json({ msg: 'Failed to fetch image' });
+    const response = await axios.get(url, { responseType: 'arraybuffer' });
+    res.set('Content-Type', response.headers['content-type']);
+    res.send(response.data);
+  } catch (err) {
+    res.status(500).send('Lỗi khi lấy ảnh từ Google Drive');
   }
 });
 
