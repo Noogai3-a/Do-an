@@ -5,19 +5,20 @@ document.addEventListener("DOMContentLoaded", () => {
   const popularContainer = document.getElementById("popular-documents");
 
   function createDocumentHTML(doc) {
-    const fileUrl = `${BACKEND_URL}/${doc.fileUrl.replace(/\\/g, '/')}`;
-    const subtitle = `${doc.subjectNameLabel || ''} • ${doc.subjectTypeLabel || ''}`;
+  const fileUrl = `https://backend-yl09.onrender.com/${doc.fileUrl.replace(/\\/g, '/')}`;
+  const subtitle = `${doc.subjectNameLabel || ''} • ${doc.subjectTypeLabel || ''}`;
 
-    return `
-      <div class="document-item">
-        <a href="${fileUrl}" target="_blank">
-          <img src="/assets/doc-default.png" alt="${doc.title}">
-          <p class="doc-title">${doc.title}</p>
-          <p class="doc-subtitle">${subtitle}</p>
-        </a>
-      </div>
-    `;
-  }
+  return `
+    <div class="document-item">
+      <a href="${fileUrl}" target="_blank">
+        <img src="/assets/doc-default.png" alt="${doc.title}">
+        <p class="doc-title">${doc.title}</p>
+        <p class="doc-subtitle">${subtitle}</p>
+      </a>
+    </div>
+  `;
+}
+
 
   fetch(`${BACKEND_URL}/documents/latest`, {
     credentials: 'include'
