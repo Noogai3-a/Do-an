@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -14,11 +15,9 @@
   <link rel="stylesheet" href="/css/dynamic-courses.css" />
 
   <!-- Font Awesome (for icons) -->
-  <link
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-    rel="stylesheet"
-  />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
 </head>
+
 <body>
   <!-- Loading Screen -->
   <div class="loading-container" id="loading">
@@ -151,66 +150,44 @@
         </div>
       </nav>
     </div>
-    
-    <div class="content-container">
-        <div class="banner">
-            <div class="overlay"></div>
-            <div class="banner-content">
-                <h2>Tìm kiếm tài liệu tại đây</h2>
-                <div class="search-bar">
-                    <select id="search-type">
-                        <option value="document">Tài liệu</option>
-                        <option value="blog">Blog</option>
-                    </select>
-                    <input type="text" id="search-input" placeholder="Search something" autocomplete="off" />
-                    <div class="search-icon"><i class="fas fa-search"></i></div>
 
-                    <ul id="search-suggestions" class="suggestion-list"></ul>
-                </div>
-            </div>
+    <div class="content-container">
+      <div class="banner">
+        <div class="overlay"></div>
+        <div class="banner-content">
+          <h2>Tìm kiếm tài liệu tại đây</h2>
+          <div class="search-bar">
+            <select id="search-type">
+              <option value="document">Tài liệu</option>
+              <option value="blog">Blog</option>
+            </select>
+            <input type="text" id="search-input" placeholder="Search something" autocomplete="off" />
+            <div class="search-icon"><i class="fas fa-search"></i></div>
+
+            <ul id="search-suggestions" class="suggestion-list"></ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="document-box">
+        <div class="breadcrumb" id="breadcrumb">Tài liệu</div>
+
+        <div class="section">
+          <h2 class="section-title">Mới nhất</h2>
+          <div class="document-grid" id="newest-documents">
+            <!-- Sẽ được điền bằng JS -->
+            <div class="loading-docs">Đang tải...</div>
+          </div>
         </div>
 
-            <div class="document-box">
-                <div class="breadcrumb" id="breadcrumb">Tài liệu</div>
-                
-                <div class="section">
-                    <h2 class="section-title">Mới nhất</h2>
-                    <div class="document-grid">
-                    <div class="document-item">
-                        <img src="img.png" alt="doc 1">
-                        <p>Bài tập XSTK chương 1</p>
-                    </div>
-                    <div class="document-item">
-                        <img src="img.png" alt="doc 2">
-                        <p>Bài tập XSTK chương 2</p>
-                    </div>
-                    <div class="document-item">
-                        <img src="img.png" alt="doc 3">
-                        <p>Bài tập XSTK chương 3</p>
-                    </div>
-                    </div>
-                </div>
-                
-                <div class="section">
-                    <h2 class="section-title">Được xem nhiều</h2>
-                    <div class="document-grid">
-                        <div class="document-grid">
-                            <div class="document-item">
-                            <img src="img.png" alt="doc 1">
-                            <p>Bài tập XSTK chương 1</p>
-                            </div>
-                            <div class="document-item">
-                            <img src="img.png" alt="doc 2">
-                            <p>Bài tập XSTK chương 2</p>
-                            </div>
-                            <div class="document-item">
-                            <img src="img.png" alt="doc 3">
-                            <p>Bài tập XSTK chương 3</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="section">
+          <h2 class="section-title">Được xem nhiều</h2>
+          <div class="document-grid" id="popular-documents">
+            <!-- Sẽ được điền bằng JS -->
+            <div class="loading-docs">Đang tải...</div>
+          </div>
+        </div>
+      </div>
 
       <!-- ========= Phần "Danh sách" (Dynamic) ========= -->
       <section class="course-list-section">
@@ -253,5 +230,8 @@
 
   <!-- New JS for dynamic course list -->
   <script src="/js/dynamic-courses.js"></script>
+
+  <script src="/js/document-display.js"></script>
 </body>
+
 </html>
