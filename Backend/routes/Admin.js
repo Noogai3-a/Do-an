@@ -5,6 +5,7 @@ const upload = multer({ dest: 'uploads/' }); // Đường dẫn tạm để lưu
 const blogAdminController = require('../controllers/blogAdminController');
 const requireAdmin = require('../middleware/requireAdmin');
 const documentController = require('../controllers/documentController');
+const adminController = require('../controllers/adminController');
 
 router.get('/stats', requireAdmin, blogAdminController.getAdminStats);
 
