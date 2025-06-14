@@ -1,3 +1,10 @@
+const fs = require('fs');
+
+if (process.env.GOOGLE_CREDENTIALS) {
+  const decoded = Buffer.from(process.env.GOOGLE_CREDENTIALS, 'base64').toString('utf8');
+  fs.writeFileSync('credentials.json', decoded);
+}
+
 const express = require('express');
 const mongoose = require('mongoose');
 const session = require('express-session');
@@ -89,6 +96,11 @@ const proxyRoutes = require('./routes/proxy');
 const uploadRoutes = require('./routes/uploadDocumentRoutes');
 const documentRoutes = require('./routes/reviewDocumentRoutes');
 const reviewDocRoutes = require('./routes/documentRoutes');
+const apiAuthMiddleware = require('./middleware/apiAuthMiddleware');
+const documentController = require('./controllers/documentController');
+
+app.get('/api/documents/my', apiAuthMiddleware, documentController.getMyDocuments);
+
 
 
 app.use('/api/auth', authRoutes);

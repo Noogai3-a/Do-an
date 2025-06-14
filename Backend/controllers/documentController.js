@@ -29,7 +29,7 @@ exports.getDocumentsBySubject = async (req, res) => {
   const query = {
     subjectTypeSlug,
     subjectNameSlug,
-    status: 'pending'
+    status: 'approved'
   };
 
   console.log('[MongoDB Query]', query);
@@ -99,5 +99,19 @@ exports.approveDocument = async (req, res) => {
     res.status(500).json({ error: 'SERVER_ERROR' });
   }
 };
+
+exports.getMyDocuments = async (req, res) => {
+  try {
+    const username = req.session.user?.username || req.session.admin?.username;
+    if (!username) return res.status(401).json({ msg: 'Not logged in' });
+
+    const documents = await Document.find({ uploader: username }).sort({ uploadDate: -1 });
+    res.json(documents);
+  } catch (err) {
+    console.error("Lỗi khi lấy tài liệu của user:", err);
+    res.status(500).json({ msg: 'Server error' });
+  }
+};
+
 
 
