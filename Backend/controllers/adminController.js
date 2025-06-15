@@ -9,12 +9,19 @@ exports.uploadMultipleDocuments = async (req, res) => {
       return res.status(400).json({ message: 'Chưa chọn file nào' });
     }
 
+    const labels = getLabelsFromSlug(subjectTypeSlug, subjectNameSlug);
+    if (!labels) {
+      return res.status(400).json({ message: 'Slug không hợp lệ hoặc không tìm thấy label' });
+    }
+
     const documents = files.map((file, index) => ({
       title: `${titlePrefix || 'Tài liệu'} ${index + 1}`,
       documentType,
       subjectTypeSlug,
       subjectNameSlug,
-      fileUrl: `/uploads/${file.filename}`,
+      subjectTypeLabel: labels.subjectTypeLabel,
+      subjectNameLabel: labels.subjectNameLabel,
+      fileUrl: `/uploads/${file.filename.replace(/\\/g, '/')}`,
       uploader: 'Admin',
       status: 'approved',
       uploadDate: new Date()
@@ -25,6 +32,9 @@ exports.uploadMultipleDocuments = async (req, res) => {
     res.json({ success: true, insertedCount: inserted.length, documents: inserted });
   } catch (err) {
     console.error('[uploadMultipleDocuments]', err);
-    res.status(500).json({ message: 'Lỗi máy chủ khi upload nhiều file' });
+    if (!res.headersSent) {
+      res.status(500).json({ message: 'Lỗi máy chủ khi upload nhiều file' });
+    }
   }
 };
+
