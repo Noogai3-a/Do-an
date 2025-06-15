@@ -1,3 +1,18 @@
+const data = require('../data.json'); // đảm bảo đường dẫn đúng
+
+function getLabelsFromSlug(subjectTypeSlug, subjectNameSlug) {
+  const subjectType = data[subjectTypeSlug];
+  if (!subjectType || !subjectType.subjects) return null;
+
+  const subject = subjectType.subjects.find(s => s.slug === subjectNameSlug);
+  if (!subject) return null;
+
+  return {
+    subjectTypeLabel: subjectType.label,
+    subjectNameLabel: subject.label
+  };
+}
+
 exports.uploadMultipleDocuments = async (req, res) => {
   try {
     const { titlePrefix, documentType, subjectTypeSlug, subjectNameSlug } = req.body;
