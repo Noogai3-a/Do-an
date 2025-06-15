@@ -24,11 +24,7 @@ async function generateThumbnailFromPdf(pdfPath, outputImagePath) {
 async function convertDocxToPdf(inputPath, outputPath) {
   const { value: html } = await mammoth.convertToHtml({ path: inputPath });
 
-  const browser = await puppeteer.launch({
-    headless: true,
-    executablePath: puppeteer.executablePath(),
-  args: ['--no-sandbox', '--disable-setuid-sandbox']
-  });
+  const browser = await puppeteer.launch();
   const page = await browser.newPage();
   await page.setContent(html, { waitUntil: "networkidle0" });
   await page.pdf({
