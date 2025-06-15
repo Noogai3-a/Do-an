@@ -9,8 +9,10 @@ const storage = multer.diskStorage({
     cb(null, 'uploads/');
   },
   filename: function (req, file, cb) {
-    cb(null, Date.now() + '-' + file.originalname);
-  }
+  const sanitized = file.originalname.replace(/\s+/g, '_'); // thay space bằng "_"
+  cb(null, Date.now() + '-' + sanitized);
+}
+
 });
 
 // Định nghĩa loại file được phép (PDF, DOC, DOCX, PPT, PPTX)
