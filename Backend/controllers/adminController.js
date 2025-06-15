@@ -32,7 +32,9 @@ exports.uploadMultipleDocuments = async (req, res) => {
     }
 
     const documents = files.map((file, index) => ({
-      title: `${titlePrefix || 'Tài liệu'} ${index + 1}`,
+      title: titlePrefix?.trim()
+        ? `${titlePrefix.trim()} ${index + 1}`
+        : file.originalname.replace(/\.[^/.]+$/, ''), // bỏ phần mở rộng .pdf
       documentType,
       subjectTypeSlug,
       subjectNameSlug,

@@ -9,9 +9,9 @@ const storage = multer.diskStorage({
     cb(null, 'uploads/');
   },
   filename: function (req, file, cb) {
-  const sanitized = file.originalname.replace(/\s+/g, '_'); // thay space bằng "_"
-  cb(null, Date.now() + '-' + sanitized);
-}
+    const sanitized = file.originalname.replace(/\s+/g, '_'); // thay space bằng "_"
+    cb(null, Date.now() + '-' + sanitized);
+  }
 
 });
 
@@ -20,7 +20,8 @@ const filetypes = /pdf|doc|docx/;
 const allowedMimeTypes = [
   'application/pdf',
   'application/msword', // .doc
-  'application/vnd.openxmlformats-officedocument.wordprocessingml.document' // .docx
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // .docx
+  'application/octet-stream' // 👈 cho tạm để chấp nhận nếu cần
 ];
 
 
@@ -34,9 +35,11 @@ const upload = multer({
     if (extname && mimetype) {
       cb(null, true);
     } else {
-      cb(new Error('Chỉ chấp nhận file PDF, DOC, DOCX, PPT, PPTX'));
+      cb(new Error('File không hợp lệ.'));
     }
+
   }
+
 });
 
 module.exports = upload;
