@@ -1,34 +1,34 @@
 const fs = require('fs');
 const path = require('path');
 const mammoth = require('mammoth');
-const puppeteer = require('puppeteer');
-process.env.PUPPETEER_EXECUTABLE_PATH = puppeteer.executablePath();
+const chromium = require('chrome-aws-lambda');
 const Document = require('../models/Document');
 const data = require('../data.json');
 
 async function generateThumbnailFromPdf(pdfPath, outputImagePath) {
-  const browser = await puppeteer.launch();
+  const browser = await chromium.puppeteer.launch({
+    args: chromium.args,
+    executablePath: await chromium.executablePath,
+    headless: chromium.headless,
+  });
+
   const page = await browser.newPage();
-
-  // Mở file PDF
   await page.goto(`file://${path.resolve(pdfPath)}`, { waitUntil: 'networkidle0' });
-
-  // Tùy chỉnh viewport để chụp trang đầu
   await page.setViewport({ width: 800, height: 1000 });
-
-  // Chụp ảnh
   await page.screenshot({ path: outputImagePath, fullPage: false });
   await browser.close();
 }
 
+
 async function convertDocxToPdf(inputPath, outputPath) {
   const { value: html } = await mammoth.convertToHtml({ path: inputPath });
 
-  const browser = await puppeteer.launch({
-    headless: true,
-    executablePath: puppeteer.executablePath(),
-  args: ['--no-sandbox', '--disable-setuid-sandbox']
+  const browser = await chromium.puppeteer.launch({
+    args: chromium.args,
+    executablePath: await chromium.executablePath,
+    headless: chromium.headless,
   });
+
   const page = await browser.newPage();
   await page.setContent(html, { waitUntil: "networkidle0" });
   await page.pdf({
@@ -36,8 +36,10 @@ async function convertDocxToPdf(inputPath, outputPath) {
     format: "A4",
     printBackground: true,
   });
+
   await browser.close();
 }
+
 
 function getLabelsFromSlug(subjectTypeSlug, subjectNameSlug) {
   const subjectType = data[subjectTypeSlug];
