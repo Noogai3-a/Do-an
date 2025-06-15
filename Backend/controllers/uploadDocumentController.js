@@ -26,6 +26,7 @@ async function convertDocxToPdf(inputPath, outputPath) {
 
   const browser = await puppeteer.launch({
     headless: true,
+    executablePath: puppeteer.executablePath(),
   args: ['--no-sandbox', '--disable-setuid-sandbox']
   });
   const page = await browser.newPage();
