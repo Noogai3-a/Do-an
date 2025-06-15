@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const upload = require('../middlewares/upload');
+const upload = require('../middleware/upload');
  // Đường dẫn tạm để lưu file
 const blogAdminController = require('../controllers/blogAdminController');
 const requireAdmin = require('../middleware/requireAdmin');
