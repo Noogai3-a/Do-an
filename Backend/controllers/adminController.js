@@ -1,5 +1,7 @@
-const data = require('../data.json'); // đảm bảo đường dẫn đúng
+const Document = require('../models/Document');
+const data = require('../data.json');
 
+// 👇 Thêm tra label từ slug
 function getLabelsFromSlug(subjectTypeSlug, subjectNameSlug) {
   const subjectType = data[subjectTypeSlug];
   if (!subjectType || !subjectType.subjects) return null;
@@ -13,7 +15,9 @@ function getLabelsFromSlug(subjectTypeSlug, subjectNameSlug) {
   };
 }
 
+// 👇 Hàm xử lý upload nhiều tài liệu
 exports.uploadMultipleDocuments = async (req, res) => {
+  console.log('[uploadMultipleDocuments] ĐÃ GỌI VÀO');
   try {
     const { titlePrefix, documentType, subjectTypeSlug, subjectNameSlug } = req.body;
     const files = req.files;
@@ -39,6 +43,7 @@ exports.uploadMultipleDocuments = async (req, res) => {
       status: 'approved',
       uploadDate: new Date()
     }));
+
 
     const inserted = await Document.insertMany(documents);
 
