@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const mammoth = require('mammoth');
 const puppeteer = require('puppeteer');
+process.env.PUPPETEER_EXECUTABLE_PATH = puppeteer.executablePath();
 const Document = require('../models/Document');
 const data = require('../data.json');
 
