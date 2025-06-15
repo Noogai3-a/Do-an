@@ -1,5 +1,3 @@
-const Document = require('../models/Document');
-
 exports.uploadMultipleDocuments = async (req, res) => {
   try {
     const { titlePrefix, documentType, subjectTypeSlug, subjectNameSlug } = req.body;
@@ -31,10 +29,9 @@ exports.uploadMultipleDocuments = async (req, res) => {
 
     res.json({ success: true, insertedCount: inserted.length, documents: inserted });
   } catch (err) {
-    console.error('[uploadMultipleDocuments]', err);
+    console.error('[uploadMultipleDocuments ERROR]', err);
     if (!res.headersSent) {
       res.status(500).json({ message: 'Lỗi máy chủ khi upload nhiều file' });
     }
   }
 };
-
