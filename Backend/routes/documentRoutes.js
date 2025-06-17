@@ -7,11 +7,13 @@ const apiAuth = require('../middleware/apiAuthMiddleware');
 router.get('/latest', documentController.getLatestDocuments);
 router.get('/popular', documentController.getPopularDocuments);
 router.get('/by-subject/:subjectTypeSlug/:subjectNameSlug', documentController.getDocumentsBySubject);
+// routes/reviewDocumentRoutes.js
+router.put('/:id',  documentController.updateDocument);
 
 // Lấy tài liệu do user hiện tại đăng
 router.get('/my', apiAuth, documentController.getMyDocuments);
 
 // Route lấy chi tiết theo ID — đặt cuối cùng
-// router.get('/:id', documentController.getDocumentById);
+router.get('/:id', documentController.getDocumentById);
 
 module.exports = router;

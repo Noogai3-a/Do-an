@@ -35,7 +35,7 @@ exports.getDocumentsBySubject = async (req, res) => {
   console.log('[MongoDB Query]', query);
 
   try {
-    const documents = await Document.find(query).select('title fileUrl').lean();
+    const documents = await Document.find(query).select('title slug fileUrl').lean();
 
     if (!documents || documents.length === 0) {
       // Trả về mảng rỗng thay vì lỗi 404
@@ -110,6 +110,61 @@ exports.getMyDocuments = async (req, res) => {
   } catch (err) {
     console.error("Lỗi khi lấy tài liệu của user:", err);
     res.status(500).json({ msg: 'Server error' });
+  }
+};
+
+exports.updateDocument = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const { title, description, subjectName } = req.body;
+
+    const doc = await Document.findById(id);
+    if (!doc) return res.status(404).json({ msg: 'Document không tồn tại' });
+
+    const isAdmin = req.session.user?.role === 'admin';
+    const isAuthor = doc.uploader === req.session.user?.username;
+
+    if (!isAdmin && !isAuthor) {
+      return res.status(403).json({ msg: 'Không có quyền chỉnh sửa tài liệu này' });
+    }
+
+    // Cập nhật metadata
+    doc.title = title || doc.title;
+    doc.description = description || doc.description;
+    doc.subjectName = subjectName || doc.subjectName;
+
+    // Nếu có file mới → thay thế file cũ
+    if (req.file) {
+      const oldPath = doc.pdfPath;
+      doc.pdfPath = req.file.path;
+
+      // Xoá file cũ nếu tồn tại
+      if (oldPath && fs.existsSync(oldPath)) {
+        fs.unlink(oldPath, (err) => {
+          if (err) console.error('❌ Lỗi xoá file cũ:', err);
+        });
+      }
+    }
+
+    await doc.save();
+
+    res.json({ msg: 'Cập nhật tài liệu thành công', document: doc });
+  } catch (err) {
+    console.error('Lỗi update document:', err);
+    res.status(500).json({ msg: 'Lỗi server' });
+  }
+};
+
+exports.getDocumentById = async (req, res) => {
+  try {
+    const doc = await Document.findById(req.params.id);
+    if (!doc) {
+      return res.status(404).json({ msg: 'Document không tồn tại' });
+    }
+    res.json(doc);
+  } catch (err) {
+    console.error('Lỗi khi lấy document theo ID:', err);
+    res.status(500).json({ msg: 'Lỗi server' });
   }
 };
 

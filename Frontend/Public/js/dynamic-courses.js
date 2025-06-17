@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
               .then(data => {
                 fileList.innerHTML = '';
                 fileList.dataset.loaded = 'true';
-
+                console.log("Danh sách tài liệu trả về:", data.documents);
                 if (!data.documents || data.documents.length === 0) {
                   const noFile = document.createElement('li');
                   noFile.textContent = 'Chưa có file tài liệu.';
@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 data.documents.forEach(doc => {
                   const fileLi = document.createElement('li');
                   const link = document.createElement('a');
-                  link.href = `/document.html?id=${encodeURIComponent(doc._id)}`;
+                  link.href = `/document.html?slug=${doc.slug}`;
                   link.textContent = doc.title;
 
                   fileLi.appendChild(link);

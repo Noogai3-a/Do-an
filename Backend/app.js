@@ -1,8 +1,15 @@
 const fs = require('fs');
+const path = require('path');
+require('dotenv').config();
 
 if (process.env.GOOGLE_CREDENTIALS) {
   const decoded = Buffer.from(process.env.GOOGLE_CREDENTIALS, 'base64').toString('utf8');
-  fs.writeFileSync('credentials.json', decoded);
+  const outputPath = path.join(__dirname, 'credentials.json');
+
+  if (!fs.existsSync(outputPath)) {
+    fs.writeFileSync(outputPath, decoded);
+    console.log('✅ credentials.json written successfully');
+  }
 }
 
 const express = require('express');
@@ -10,8 +17,6 @@ const mongoose = require('mongoose');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const cors = require('cors');
-const path = require('path');
-require('dotenv').config();
 
 const app = express();
 
@@ -97,6 +102,7 @@ const documentRoutes = require('./routes/reviewDocumentRoutes');
 const reviewDocRoutes = require('./routes/documentRoutes');
 const apiAuthMiddleware = require('./middleware/apiAuthMiddleware');
 const documentController = require('./controllers/documentController');
+const notificationRoutes = require('./routes/notificationRoutes');
 
 app.get('/api/documents/my', apiAuthMiddleware, documentController.getMyDocuments);
 
@@ -104,8 +110,7 @@ app.get('/api/documents/my', apiAuthMiddleware, documentController.getMyDocument
 
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
-app.use('/api', proxyRoutes);
-
+app.use('/api/notifications', notificationRoutes);
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -185,7 +190,6 @@ app.get('/upload', authMiddleware, (req, res) => {
 });
 
 
-app.use('/api/admin', adminRoutes);
 app.use('/api/blogs', blogRoutes);
 app.use('/uploads/previews', express.static(path.join(__dirname, 'uploads/previews')));
 
@@ -193,12 +197,14 @@ app.use('/uploads/previews', express.static(path.join(__dirname, 'uploads/previe
 app.get('/api/user-info', authMiddleware, (req, res) => {
     if (req.session.admin) {
         return res.json({ 
+            _id: req.session.admin.id,
             role: 'admin',
             username: req.session.admin.username,
             email: req.session.admin.email
         });
     } else if (req.session.user) {
         return res.json({ 
+            _id: req.session.user.id,
             role: 'user',
             username: req.session.user.username,
             email: req.session.user.email
@@ -207,6 +213,7 @@ app.get('/api/user-info', authMiddleware, (req, res) => {
         return res.status(401).json({ msg: 'Not logged in' });
     }
 });
+app.use('/api', proxyRoutes)
 // Thêm route đổi mật khẩu
 const bcrypt = require('bcryptjs');
 app.post('/api/change-password', authMiddleware, async (req, res) => {

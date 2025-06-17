@@ -113,6 +113,18 @@ function md5(string) {
   return CryptoJS.MD5(string).toString();
 }
 
+function containsBadWords(text) {
+  const badWords = [
+      'fuck', 'shit', 'damn', 'bitch', 'ass',
+      'đụ', 'địt', 'đéo', 'đcm', 'đcmn', 'đít',
+      'lồn', 'cặc', 'đụ', 'đéo', 'đcm', 'đcmn',
+      // Thêm các từ cấm khác vào đây
+  ];
+    
+  const lowerText = text.toLowerCase();
+  return badWords.some(word => lowerText.includes(word.toLowerCase()));
+}
+
 document.addEventListener('DOMContentLoaded', async function () {
   const form = document.querySelector('.comment-form');
   const textarea = form.querySelector('textarea');
@@ -155,39 +167,164 @@ document.addEventListener('DOMContentLoaded', async function () {
   }
 
   async function renderComment(comment) {
+      const div = document.createElement('div');
+      div.classList.add('comment-item');
+      div.dataset.commentId = comment._id;
+
+      const avatarUrl = await resolveAvatar(comment.email);
+
+      div.innerHTML = `
+        <img src="${avatarUrl}" alt="Avatar" class="avatar">
+        <div class="comment-content">
+            <strong>${escapeHtml(comment.username)}</strong>
+            <p>${escapeHtml(comment.content)}</p>
+            <button class="reply-button">Reply</button>
+            <form class="reply-form" style="display: none;">
+                <textarea 
+                    id="reply-text-${comment._id}" 
+                    name="reply-text" 
+                    placeholder="Viết phản hồi của bạn..." 
+                    rows="2"
+                    required
+                ></textarea>
+                <button type="submit" id="submit-reply-${comment._id}" name="submit-reply">Gửi phản hồi</button>
+            </form>
+            <div class="replies-container"></div>
+        </div>
+      `;
+
+      // Xử lý nút reply
+      const replyButton = div.querySelector('.reply-button');
+      const replyForm = div.querySelector('.reply-form');
+      const submitButton = replyForm.querySelector('button[type="submit"]');
+      
+      replyButton.addEventListener('click', () => {
+          replyForm.style.display = replyForm.style.display === 'none' ? 'block' : 'none';
+      });
+
+      // Xử lý form reply
+      replyForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const textarea = replyForm.querySelector('textarea');
+          const content = textarea.value.trim();
+          
+          if (!content) {
+            showToast('Vui lòng nhập nội dung phản hồi', 'error');
+            return;          
+          }
+          if (containsBadWords(content)) {
+            showToast('Phản hồi chứa từ ngữ không phù hợp', 'error');
+            return;
+          }
+          submitButton.disabled = true;
+          submitButton.textContent = 'Đang gửi...';
+          
+          try {
+              const res = await fetch(`https://backend-yl09.onrender.com/api/blogs/${blogId}/comments`, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  credentials: 'include',
+                  body: JSON.stringify({
+                      blogId: blogId,
+                      username: userInfo.username,
+                      email: userInfo.email,
+                      content: content,
+                      parentComment: comment._id
+                  })
+              });
+
+              if (!res.ok) throw new Error('Failed to post reply');
+
+              const newReply = await res.json();
+              await renderReply(newReply.comment, div.querySelector('.replies-container'));
+              textarea.value = '';
+              replyForm.style.display = 'none';
+              showToast('Gửi phản hồi thành công!', 'success');
+          } catch (err) {
+              console.error('Error posting reply:', err);
+              showToast('Lỗi khi gửi phản hồi', 'error');
+          } finally {
+            // Enable lại form
+            submitButton.disabled = false;
+            submitButton.textContent = 'Gửi phản hồi';
+          }
+      });
+
+      commentsList.appendChild(div);
+  }
+
+  async function renderReply(reply, container) {
     const div = document.createElement('div');
-    div.classList.add('comment-item');
-
-    const avatarUrl = await resolveAvatar(comment.email);
-
+    div.classList.add('reply-item');
+    
+    const avatarUrl = await resolveAvatar(reply.email);
+    
     div.innerHTML = `
-      <img src="${avatarUrl}" alt="Avatar" class="avatar">
-      <div class="comment-content">
-        <strong>${escapeHtml(comment.username)}</strong>
-        <p>${escapeHtml(comment.content)}</p>
-      </div>
+        <img src="${avatarUrl}" alt="Avatar" class="avatar">
+        <div class="comment-content">
+            <strong>${escapeHtml(reply.username)}</strong>
+            <p>${escapeHtml(reply.content)}</p>
+        </div>
     `;
-    commentsList.appendChild(div);
+    
+    container.appendChild(div);
+  }
+
+  function showToast(message, type = 'success') {
+    const toastEl = document.getElementById('liveToast');
+    const toastBody = toastEl.querySelector('.toast-body');
+
+    toastEl.classList.remove('bg-success', 'bg-danger', 'text-white');
+
+    if (type === 'error') {
+        toastEl.classList.add('bg-danger', 'text-white');
+    } else {
+        toastEl.classList.add('bg-success', 'text-white');
+    }
+
+    toastBody.innerHTML = message;
+
+    const toast = new bootstrap.Toast(toastEl, {
+        delay: 2000,
+        autohide: true
+    });
+
+    toast.show();
+  }
+
+// Thêm hàm escapeHtml nếu chưa có
+  function escapeHtml(text) {
+      return text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
 
   async function loadComments() {
     const isPreview = getQueryParam("preview") === "true";
-      try {
+    try {
         const res = await fetch(`https://backend-yl09.onrender.com/api/blogs/${blogId}?preview=${isPreview}`,
-          {credentials: 'include'}
+            {credentials: 'include'}
         );
         if (!res.ok) throw new Error('Không thể tải bài viết');
         const data = await res.json();
 
         const comments = data.comments || [];
+        const replies = comments.filter(c => c.parentComment);
+        const parentComments = comments.filter(c => !c.parentComment);
 
         commentsList.innerHTML = '';
-        for (const comment of comments) {
-          await renderComment(comment);
+        for (const comment of parentComments) {
+            await renderComment(comment);
+            // Load replies cho comment này
+            const commentReplies = replies.filter(r => r.parentComment === comment._id);
+            for (const reply of commentReplies) {
+                const commentElement = commentsList.querySelector(`[data-comment-id="${comment._id}"]`);
+                if (commentElement) {
+                    await renderReply(reply, commentElement.querySelector('.replies-container'));
+                }
+            }
         }
-      } catch (err) {
+    } catch (err) {
         console.error('Lỗi load comments:', err);
-      }
+    }
   }
 
   if (blogId) {
@@ -200,9 +337,12 @@ document.addEventListener('DOMContentLoaded', async function () {
     const commentText = textarea.value.trim();
     if (!commentText) return alert('Vui lòng nhập bình luận');
     if (!blogId) return alert('Không xác định được bài viết');
+    if (containsBadWords(commentText)) {
+        showToast('Comment chứa từ ngữ không phù hợp', 'error');
+        return;
+    }
 
     if (!userInfo || !userInfo.username || !userInfo.email) {
-      // Chuyển trang đến login (thay URL theo dự án của bạn)
       window.location.href = '/login'; 
       return;
     }

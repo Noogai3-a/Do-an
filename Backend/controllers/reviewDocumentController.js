@@ -62,7 +62,7 @@ exports.rejectDocument = async (req, res) => {
     if (!doc) return res.status(404).json({ msg: 'Tài liệu không tồn tại' });
 
     // Normalize path: chuyển \ thành / nếu cần
-    const relativePath = doc.fileUrl.replace(/\\/g, '/'); // "uploads/1748674484684-23521296.pdf"
+    const relativePath = doc.fileUrl.replace(/\\/g, '/')
     const absolutePath = path.resolve(relativePath); // chuyển sang đường dẫn tuyệt đối
 
     // Xóa file khỏi ổ đĩa
@@ -82,6 +82,7 @@ exports.rejectDocument = async (req, res) => {
     res.status(500).json({ msg: 'Lỗi khi từ chối tài liệu' });
   }
 };
+
 exports.getDocumentById = async (req, res) => {
   try {
     const id = req.params.id;
@@ -95,5 +96,51 @@ exports.getDocumentById = async (req, res) => {
   } catch (error) {
     console.error('Lỗi khi lấy tài liệu:', error);
     res.status(500).json({ message: 'Lỗi server' });
+  }
+};
+
+exports.getDocumentBySlug = async (req, res) => {
+  try {
+    const slug = req.params.slug;
+    const doc = await Document.findOne({ slug }).lean();
+    console.log('Received slug:', req.params.slug);
+
+    if (!doc) {
+      return res.status(404).json({ message: 'Tài liệu không tồn tại' });
+    }
+    console.log('Tìm được:', doc);
+
+    res.json(doc);
+  } catch (error) {
+    console.error('Lỗi khi lấy tài liệu:', error);
+    res.status(500).json({ message: 'Lỗi server' });
+  }
+};
+
+exports.deleteDocument = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const doc = await Document.findById(id);
+
+    if (!doc) {
+      return res.status(404).json({ error: 'Document not found' });
+    }
+
+    // Xóa file vật lý nếu tồn tại
+    const relativePath = doc.fileUrl.replace(/\\/g, '/');
+    const absolutePath = path.resolve(relativePath);
+
+    fs.unlink(absolutePath, async (err) => {
+      if (err) {
+        console.warn('Không thể xóa file:', err.message);
+        // Vẫn tiếp tục xóa trong DB
+      }
+
+      await Document.findByIdAndDelete(id);
+      res.json({ success: true, message: 'Document deleted successfully' });
+    });
+  } catch (err) {
+    console.error('Error deleting document:', err);
+    res.status(500).json({ error: 'Server error' });
   }
 };
